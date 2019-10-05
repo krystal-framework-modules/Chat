@@ -25,6 +25,23 @@ final class MessageMapper extends AbstractMapper
     }
 
     /**
+     * Deletes a dialog between two users
+     * 
+     * @param int $senderId An id of sender
+     * @param int $receiverId An id of receiver
+     * @return boolean
+     */
+    public function deleteDialog($senderId, $receiverId)
+    {
+        $db = $this->db->delete()
+                       ->from(self::getTableName())
+                       ->whereEquals('sender_id', $senderId)
+                       ->andWhereEquals('receiver_id', $receiverId);
+
+        return (bool) $db->execute(true);
+    }
+
+    /**
      * Count amount of new messages
      * 
      * @param int $ownerId Profile id

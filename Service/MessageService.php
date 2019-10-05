@@ -60,6 +60,18 @@ final class MessageService extends AbstractService
     }
 
     /**
+     * Deletes a dialog between two users
+     * 
+     * @param int $senderId An id of sender
+     * @param int $receiverId An id of receiver
+     * @return boolean
+     */
+    public function deleteDialog($senderId, $receiverId)
+    {
+        return $this->messageMapper->deleteDialog($senderId, $receiverId);
+    }
+
+    /**
      * Fetch a dialog of two users
      * 
      * @param int $senderId An id of sender
