@@ -37,7 +37,8 @@ final class MessageMapper extends AbstractMapper
         $columns = array(
             'id',
             'message',
-            'datetime'
+            'datetime',
+            'read'
         );
 
         $db = $this->db->select($columns)

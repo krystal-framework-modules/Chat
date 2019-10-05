@@ -41,7 +41,8 @@ final class MessageService extends AbstractService
             'sender_id' => $senderId,
             'receiver_id' = $receiverId,
             'message' => $message,
-            'datetime' => TimeHelper::getNow()
+            'datetime' => TimeHelper::getNow(),
+            'read' => '0'
         );
 
         return $this->messageMapper->persist($data);
