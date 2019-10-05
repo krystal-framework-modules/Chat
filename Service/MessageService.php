@@ -28,6 +28,17 @@ final class MessageService extends AbstractService
     }
 
     /**
+     * Count amount of new messages
+     * 
+     * @param int $ownerId Profile id
+     * @return int
+     */
+    public function countNew($ownerId)
+    {
+        return $this->messageMapper->countNew();
+    }
+
+    /**
      * Sends a message
      * 
      * @param int $senderId An id of sender

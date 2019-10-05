@@ -25,6 +25,23 @@ final class MessageMapper extends AbstractMapper
     }
 
     /**
+     * Count amount of new messages
+     * 
+     * @param int $ownerId Profile id
+     * @return int
+     */
+    public function countNew($ownerId)
+    {
+        $db = $this->db->select()
+                       ->count('id')
+                       ->from(self::getTableName())
+                       ->whereEquals('sender_id', $ownerId)
+                       ->andWhereEquals('read', '0');
+
+        return (int) $db->queryScalar();
+    }
+
+    /**
      * Fetch a dialog of two users
      * 
      * @param int $senderId An id of sender
