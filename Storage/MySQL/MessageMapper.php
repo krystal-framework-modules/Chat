@@ -23,4 +23,30 @@ final class MessageMapper extends AbstractMapper
     {
         return 'id';
     }
+
+    /**
+     * Fetch a dialog of two users
+     * 
+     * @param int $senderId An id of sender
+     * @param int $receiverId An id of receiver
+     * @return array
+     */
+    public function fetchDialog($senderId, $receiverId)
+    {
+        // Columns to be selected
+        $columns = array(
+            'id',
+            'message',
+            'datetime'
+        );
+
+        $db = $this->db->select($columns)
+                       ->from(self::getTableName())
+                       ->whereEquals('sender_id', $senderId)
+                       ->andWhereEquals('receiver_id', $receiverId)
+                       ->orderBy('id')
+                       ->desc();
+
+        return $db->queryAll();
+    }
 }
