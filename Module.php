@@ -3,6 +3,7 @@
 namespace Chat;
 
 use Krystal\Application\Module\AbstractModule;
+use Chat\Service\MessageService;
 
 final class Module extends AbstractModule
 {
@@ -25,6 +26,7 @@ final class Module extends AbstractModule
     public function getServiceProviders()
     {
         return array(
+            'messageService' => new MessageService($this->createMapper('\Chat\Storage\MySQL\MessageMapper'))
         );
     }
 }
