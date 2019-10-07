@@ -3,6 +3,7 @@
 namespace Chat\Storage\MySQL;
 
 use Krystal\Db\Sql\AbstractMapper;
+use Krystal\Db\Sql\RawSqlFragment;
 use User\Storage\MySQL\UserMapper;
 
 final class MessageMapper extends AbstractMapper
@@ -99,7 +100,10 @@ final class MessageMapper extends AbstractMapper
             'id',
             'message',
             'datetime',
-            'read'
+            'read',
+            new RawSqlFragment(sprintf(
+                '(%s = %s) AS `owner`', 'receiver_id', (int) $senderId
+            ))
         );
 
         $values = array($senderId, $receiverId);
@@ -107,9 +111,7 @@ final class MessageMapper extends AbstractMapper
         $db = $this->db->select($columns)
                        ->from(self::getTableName())
                        ->whereIn('sender_id', $values)
-                       ->andWhereIn('receiver_id', $values)
-                       ->orderBy('id')
-                       ->desc();
+                       ->andWhereIn('receiver_id', $values);
 
         return $db->queryAll();
     }
