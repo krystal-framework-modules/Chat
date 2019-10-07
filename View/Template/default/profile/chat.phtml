@@ -1,0 +1,36 @@
+<div class="row">
+    <div class="col-lg-3">
+        <ul>
+            <?php foreach ($receivers as $receiver): ?>
+            <li>
+                <a href="<?= $this->url('Chat:Chat@dialogAction', array($receiver['id'])); ?>"><img class="img-fluid rounded-circle" src="https://via.placeholder.com/50" /> <?= $receiver['name']; ?></a>
+            </li>
+            <?php endforeach; ?>
+        </ul>
+    </div>
+
+    <div class="col-lg-9">
+        <?php if (isset($dialog)): ?>
+
+        <div class="card">
+            <div class="card-body">
+                <?php foreach ($dialog as $message): ?>
+                <div class="d-flex justify-content-<?= $message['owner'] == 1 ? 'start' : 'end'; ?> mb-4">
+                    <div class="chat-sender">
+                        <img class="img-fluid rounded-circle" src="https://via.placeholder.com/50" />
+                    </div>
+
+                    <div class="chat-message">
+                        <?= $message['message']; ?>
+                        <small class="chat-message-time"><?= $message['datetime']; ?></small>
+                    </div>
+                </div>
+                <?php endforeach; ?>
+            </div>
+        </div>
+
+        <?php else: ?>
+        <p><?php $this->show('Please select a chat to start messaging'); ?></p>
+        <?php endif; ?>
+    </div>
+</div>
