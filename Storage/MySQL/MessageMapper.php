@@ -73,7 +73,7 @@ final class MessageMapper extends AbstractMapper
             UserMapper::column('name')
         );
 
-        $db = $this->db->select($columns)
+        $db = $this->db->select($columns, true)
                        ->from(self::getTableName())
                        ->leftJoin(UserMapper::getTableName(), array(
                             UserMapper::column('id') => self::getRawColumn('sender_id')
