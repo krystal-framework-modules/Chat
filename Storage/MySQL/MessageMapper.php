@@ -102,10 +102,12 @@ final class MessageMapper extends AbstractMapper
             'read'
         );
 
+        $values = array($senderId, $receiverId);
+
         $db = $this->db->select($columns)
                        ->from(self::getTableName())
-                       ->whereEquals('sender_id', $senderId)
-                       ->andWhereEquals('receiver_id', $receiverId)
+                       ->whereIn('sender_id', $values)
+                       ->andWhereIn('receiver_id', $values)
                        ->orderBy('id')
                        ->desc();
 
