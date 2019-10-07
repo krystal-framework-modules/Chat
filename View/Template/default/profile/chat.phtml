@@ -21,7 +21,7 @@ use Krystal\Form\Element;
         <div class="card">
             <div class="card-body">
                 <?php foreach ($dialog as $message): ?>
-                <div class="d-flex justify-content-<?= $message['owner'] == 1 ? 'start' : 'end'; ?> mb-4">
+                <div class="d-flex justify-content-<?= $message['owner'] == 0 ? 'start' : 'end'; ?> mb-4">
                     <div class="chat-sender">
                         <img class="img-fluid rounded-circle" src="https://via.placeholder.com/50" />
                     </div>
