@@ -3,6 +3,7 @@
 namespace Chat\Storage\MySQL;
 
 use Krystal\Db\Sql\AbstractMapper;
+use User\Storage\MySQL\UserMapper;
 
 final class MessageMapper extends AbstractMapper
 {
@@ -56,6 +57,32 @@ final class MessageMapper extends AbstractMapper
                        ->andWhereEquals('read', '0');
 
         return (int) $db->queryScalar();
+    }
+
+    /**
+     * Fetch message receivers
+     * 
+     * @param int $senderId An id of sender
+     * @return array
+     */
+    public function fetchReceivers($senderId)
+    {
+        // Columns to be selected
+        $columns = array(
+            UserMapper::column('id'),
+            UserMapper::column('name')
+        );
+
+        $db = $this->db->select($columns)
+                       ->from(self::getTableName())
+                       ->leftJoin(UserMapper::getTableName(), array(
+                            UserMapper::column('id') => self::getRawColumn('sender_id')
+                       ))
+                       ->whereEquals(self::column('sender_id'), $senderId)
+                       ->orderBy(self::column('id'))
+                       ->desc();
+
+        return $db->queryAll();
     }
 
     /**

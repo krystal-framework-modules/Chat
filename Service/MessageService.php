@@ -50,7 +50,7 @@ final class MessageService extends AbstractService
     {
         $data = array(
             'sender_id' => $senderId,
-            'receiver_id' = $receiverId,
+            'receiver_id' => $receiverId,
             'message' => $message,
             'datetime' => TimeHelper::getNow(),
             'read' => '0'
@@ -69,6 +69,17 @@ final class MessageService extends AbstractService
     public function deleteDialog($senderId, $receiverId)
     {
         return $this->messageMapper->deleteDialog($senderId, $receiverId);
+    }
+
+    /**
+     * Fetch message receivers
+     * 
+     * @param int $senderId An id of sender
+     * @return array
+     */
+    public function fetchReceivers($senderId)
+    {
+        return $this->messageMapper->fetchReceivers($senderId);
     }
 
     /**
