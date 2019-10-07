@@ -49,7 +49,7 @@ final class Chat extends AbstractSiteController
     public function dialogAction($receiverId)
     {
         $senderId = $this->getAuthService()->getId();
-        $dialog = $this->getModuleService('messageService')->fetchDialog($senderId, $receiverId);
+        $dialog = $this->getModuleService('messageService')->fetchDialog($receiverId, $senderId);
 
         return $this->json($dialog);
     }

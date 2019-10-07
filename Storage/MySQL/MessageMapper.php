@@ -62,10 +62,10 @@ final class MessageMapper extends AbstractMapper
     /**
      * Fetch message receivers
      * 
-     * @param int $senderId An id of sender
+     * @param int $receiverId An id of receiver
      * @return array
      */
-    public function fetchReceivers($senderId)
+    public function fetchReceivers($receiverId)
     {
         // Columns to be selected
         $columns = array(
@@ -78,7 +78,7 @@ final class MessageMapper extends AbstractMapper
                        ->leftJoin(UserMapper::getTableName(), array(
                             UserMapper::column('id') => self::getRawColumn('sender_id')
                        ))
-                       ->whereEquals(self::column('sender_id'), $senderId)
+                       ->whereEquals(self::column('receiver_id'), $receiverId)
                        ->orderBy(self::column('id'))
                        ->desc();
 
@@ -92,7 +92,7 @@ final class MessageMapper extends AbstractMapper
      * @param int $receiverId An id of receiver
      * @return array
      */
-    public function fetchDialog($senderId, $receiverId)
+    public function fetchDialog($receiverId, $senderId)
     {
         // Columns to be selected
         $columns = array(

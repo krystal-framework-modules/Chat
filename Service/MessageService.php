@@ -89,7 +89,7 @@ final class MessageService extends AbstractService
      * @param int $receiverId An id of receiver
      * @return array
      */
-    public function fetchDialog($senderId, $receiverId)
+    public function fetchDialog($receiverId, $senderId)
     {
         return $this->messageMapper->fetchDialog($senderId, $receiverId);
     }
