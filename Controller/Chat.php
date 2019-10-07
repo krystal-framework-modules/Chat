@@ -57,7 +57,8 @@ final class Chat extends AbstractSiteController
         //return $this->json($dialog);
         return $this->view->render('profile/chat', array(
             'receivers' => $receivers,
-            'dialog' => $dialog
+            'dialog' => $dialog,
+            'receiverId' => $receiverId
         ));
     }
 

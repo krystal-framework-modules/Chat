@@ -1,3 +1,9 @@
+<?php
+
+use Krystal\Form\Element;
+
+?>
+
 <div class="row">
     <div class="col-lg-3">
         <ul>
@@ -27,6 +33,15 @@
                 </div>
                 <?php endforeach; ?>
             </div>
+        </div>
+
+        <div class="chat-sender mt-2">
+            <form action="<?= $this->url('Chat:Chat@sendAction'); ?>" method="POST">
+                <?= Element::hidden('receiver_id', $receiverId); ?>
+                <?= Element::textarea('message', null, array('class' => 'form-control', 'placeholder' => $this->translate('Type your message'))); ?>
+
+                <button class="mt-2 btn btn-primary" type="submit"><?php $this->show('Send'); ?></button>
+            </form>
         </div>
 
         <?php else: ?>
