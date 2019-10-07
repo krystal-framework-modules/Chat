@@ -14,8 +14,7 @@ final class Module extends AbstractModule
      */
     public function getRoutes()
     {
-        return array(
-        );
+        return include(__DIR__) . '/Config/routes.php';
     }
 
     /**
