@@ -8,7 +8,7 @@ use Krystal\Form\Element;
     <div class="col-lg-3">
         <ul class="list-group">
           <?php foreach ($receivers as $receiver): ?>
-          <li class="list-group-item d-flex justify-content-between align-items-center">
+          <li class="list-group-item d-flex justify-content-between align-items-center <?= isset($receiverId) && $receiverId == $receiver['id'] ? 'active' : null; ?>">
             <a href="<?= $this->url('Chat:Chat@dialogAction', array($receiver['id'])); ?>"><img class="img-fluid rounded-circle" src="https://via.placeholder.com/50" /> <?= $receiver['name']; ?></a>
 
             <small><?= $receiver['last']; ?></small>

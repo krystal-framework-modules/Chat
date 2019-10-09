@@ -54,7 +54,6 @@ final class Chat extends AbstractSiteController
         // Get receivers of current user
         $receivers = $this->getModuleService('messageService')->fetchReceivers($this->getAuthService()->getId());
 
-        //return $this->json($dialog);
         return $this->view->render('profile/chat', array(
             'receivers' => $receivers,
             'dialog' => $dialog,
