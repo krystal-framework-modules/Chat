@@ -28,11 +28,11 @@ use Krystal\Form\Element;
             <div class="card-body">
                 <?php foreach ($dialog as $message): ?>
                 <div class="d-flex justify-content-<?= $message['owner'] == 0 ? 'start' : 'end'; ?> mb-4">
-                    <div class="chat-sender">
+                    <div class="chat-sender p-2">
                         <img class="img-fluid rounded-circle" src="https://via.placeholder.com/50" />
                     </div>
 
-                    <div class="chat-message">
+                    <div class="chat-message p-2 <?= $message['read'] == 0 ? 'bg-warning text-white' : null; ?>">
                         <?= $message['message']; ?>
                         <small class="chat-message-time"><?= $message['datetime']; ?></small>
                     </div>
