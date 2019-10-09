@@ -48,24 +48,33 @@ final class Chat extends AbstractSiteController
      */
     public function dialogAction($receiverId)
     {
-        $msgServ = $this->getModuleService('messageService');
-        
-        $senderId = $this->getAuthService()->getId();
-        $dialog = $msgServ->fetchDialog($receiverId, $senderId);
+        $receiver = $this->getAuthService()->findById($receiverId);
 
-        // Get receivers of current user
-        $receivers = $msgServ->fetchReceivers($senderId);
+        if ($receiver) {
+            $msgServ = $this->getModuleService('messageService');
 
-        $output = $this->view->render('profile/chat', array(
-            'receivers' => $receivers,
-            'dialog' => $dialog,
-            'receiverId' => $receiverId
-        ));
+            $senderId = $this->getAuthService()->getId();
+            $dialog = $msgServ->fetchDialog($receiverId, $senderId);
 
-        // Mark new messages as read
-        $msgServ->markAsRead($receiverId, $senderId);
+            // Get receivers of current user
+            $receivers = $msgServ->fetchReceivers($senderId);
 
-        return $output;
+            $output = $this->view->render('profile/chat', array(
+                'receivers' => $receivers,
+                'dialog' => $dialog,
+                'receiverId' => $receiverId,
+                'current' => $receiver
+            ));
+
+            // Mark new messages as read
+            $msgServ->markAsRead($receiverId, $senderId);
+
+            return $output;
+
+        } else {
+            // Invalid id
+            return false;
+        }
     }
 
     /**

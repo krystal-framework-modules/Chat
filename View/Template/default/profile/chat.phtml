@@ -6,6 +6,8 @@ use Krystal\Form\Element;
 
 <div class="row">
     <div class="col-lg-3">
+        <h5><?php $this->show('Recent'); ?></h5>
+
         <ul class="list-group">
           <?php foreach ($receivers as $receiver): ?>
           <li class="list-group-item d-flex justify-content-between align-items-center <?= isset($receiverId) && $receiverId == $receiver['id'] ? 'active' : null; ?>">
@@ -23,6 +25,8 @@ use Krystal\Form\Element;
 
     <div class="col-lg-9">
         <?php if (isset($dialog)): ?>
+
+        <p><?= $current['name']; ?>, <?= $current['age']; ?></p>
 
         <div class="card">
             <div class="card-body">
