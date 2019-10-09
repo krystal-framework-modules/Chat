@@ -12,9 +12,11 @@ use Krystal\Form\Element;
             <ul class="list-group">
               <?php foreach ($receivers as $receiver): ?>
               <li class="list-group-item d-flex justify-content-between align-items-center <?= isset($receiverId) && $receiverId == $receiver['id'] ? 'active' : null; ?>">
-                <a href="<?= $this->url('Chat:Chat@dialogAction', array($receiver['id'])); ?>"><img class="img-fluid rounded-circle" src="https://via.placeholder.com/50" /> <?= $receiver['name']; ?></a>
-
-                <small><?= $receiver['last']; ?></small>
+                <a href="<?= $this->url('Chat:Chat@dialogAction', array($receiver['id'])); ?>">
+                    <img class="img-fluid rounded-circle" src="https://via.placeholder.com/50" />
+                    <span class="chat-receiver"><?= $receiver['name']; ?></span>
+                    <small><?= $receiver['last']; ?></small>
+                </a>
 
                 <?php if ($receiver['new'] > 0): ?>
                 <span class="badge badge-danger badge-pill">+ <?= $receiver['new']; ?></span>
@@ -32,12 +34,12 @@ use Krystal\Form\Element;
             <div class="card">
                 <div class="card-body">
                     <?php foreach ($dialog as $message): ?>
-                    <div class="d-flex justify-content-<?= $message['owner'] == 0 ? 'start' : 'end'; ?> mb-4">
+                    <div class="d-flex justify-content-<?= $message['owner'] == 0 ? 'start chat-message-sender' : 'end chat-message-receiver'; ?> mb-4">
                         <div class="chat-sender p-2">
                             <img class="img-fluid rounded-circle" src="https://via.placeholder.com/50" />
                         </div>
 
-                        <div class="chat-message p-2 <?= $message['read'] == 0 ? 'bg-warning text-white' : null; ?>">
+                        <div class="chat-message <?= $message['read'] == 0 ? 'bg-warning text-white' : null; ?>">
                             <?= $message['message']; ?>
                             <small class="chat-message-time"><?= $message['datetime']; ?></small>
                         </div>
@@ -48,10 +50,15 @@ use Krystal\Form\Element;
 
             <div class="chat-sender mt-2">
                 <form action="<?= $this->url('Chat:Chat@sendAction'); ?>" method="POST">
-                    <?= Element::hidden('receiver_id', $receiverId); ?>
-                    <?= Element::textarea('message', null, array('class' => 'form-control', 'placeholder' => $this->translate('Type your message'))); ?>
 
-                    <button class="mt-2 btn btn-primary" type="submit"><?php $this->show('Send'); ?></button>
+                    <div class="input-group">
+                        <?= Element::hidden('receiver_id', $receiverId); ?>
+                        <?= Element::textarea('message', null, array('class' => 'form-control', 'placeholder' => $this->translate('Type your message'))); ?>
+
+                        <div class="input-group-append">
+                            <button class="btn btn-outline-secondary btn-primary" type="submit"><?php $this->show('Send'); ?></button>
+                        </div>
+                    </div>
                 </form>
             </div>
 
