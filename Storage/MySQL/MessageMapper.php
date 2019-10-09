@@ -83,24 +83,37 @@ final class MessageMapper extends AbstractMapper
             return $qb->getQueryString();
         };
 
+        // Inner query to count unread message
+        $countQuery = function(){
+            $qb = new QueryBuilder();
+            $qb->select()
+               ->count(self::column('id'))
+               ->from(self::getTableName())
+               ->whereEquals(self::column('sender_id'), UserMapper::column('id'))
+               ->andWhereEquals(self::column('read'), '0');
+
+            return $qb->getQueryString();
+        };
+
         // Columns to be selected
         $columns = array(
             UserMapper::column('id'),
             UserMapper::column('name'),
             new RawSqlFragment(sprintf('(%s) AS `last`', $lastMessageQuery())),
-            new RawSqlFragment(sprintf('COUNT(%s) AS `new`', self::column('id'))),
+            new RawSqlFragment(sprintf('(%s) AS `new`', $countQuery())),
         );
 
         $db = $this->db->select($columns)
                        ->from(self::getTableName())
                        ->leftJoin(UserMapper::getTableName(), array(
-                            UserMapper::column('id') => self::getRawColumn('sender_id')
+                            UserMapper::column('id') => self::getRawColumn('sender_id'),
                        ))
                        ->whereEquals(self::column('receiver_id'), $receiverId)
-                       ->andWhereEquals(self::column('read'), '0')
                        ->groupBy(array(
+                            UserMapper::column('id'),
                             UserMapper::column('name'),
-                            'last'
+                            'last',
+                            'new'
                         ));
 
         return $db->queryAll();
