@@ -4,6 +4,7 @@ namespace Chat\Storage\MySQL;
 
 use Krystal\Db\Sql\AbstractMapper;
 use Krystal\Db\Sql\RawSqlFragment;
+use Krystal\Db\Sql\QueryBuilder;
 use User\Storage\MySQL\UserMapper;
 
 final class MessageMapper extends AbstractMapper
@@ -61,27 +62,45 @@ final class MessageMapper extends AbstractMapper
     }
 
     /**
-     * Fetch message receivers
+     * Fetch message receivers (last message, new message count and sender name)
      * 
-     * @param int $receiverId An id of receiver
+     * @param int $receiverId An id of receiver - id of currently logged-in user
      * @return array
      */
     public function fetchReceivers($receiverId)
     {
+        // Inner query to grab last message from a sender
+        $lastMessageQuery = function(){
+            $qb = new QueryBuilder();
+            $qb->select(self::column('message'))
+               ->from(self::getTableName())
+               ->whereEquals(self::column('sender_id'), UserMapper::column('id'))
+               ->andWhereEquals(self::column('read'), '0')
+               ->orderBy(self::column('id'))
+               ->desc()
+               ->limit(1);
+
+            return $qb->getQueryString();
+        };
+
         // Columns to be selected
         $columns = array(
             UserMapper::column('id'),
-            UserMapper::column('name')
+            new RawSqlFragment(sprintf('(%s) AS `last`', $lastMessageQuery())),
+            new RawSqlFragment(sprintf('COUNT(%s) AS `new`', self::column('id'))),
         );
 
-        $db = $this->db->select($columns, true)
+        $db = $this->db->select($columns)
                        ->from(self::getTableName())
                        ->leftJoin(UserMapper::getTableName(), array(
                             UserMapper::column('id') => self::getRawColumn('sender_id')
                        ))
                        ->whereEquals(self::column('receiver_id'), $receiverId)
-                       ->orderBy(self::column('id'))
-                       ->desc();
+                       ->andWhereEquals(self::column('read'), '0')
+                       ->groupBy(array(
+                            UserMapper::column('name'),
+                            'last'
+                        ));
 
         return $db->queryAll();
     }
