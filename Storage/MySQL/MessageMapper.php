@@ -86,6 +86,7 @@ final class MessageMapper extends AbstractMapper
         // Columns to be selected
         $columns = array(
             UserMapper::column('id'),
+            UserMapper::column('name'),
             new RawSqlFragment(sprintf('(%s) AS `last`', $lastMessageQuery())),
             new RawSqlFragment(sprintf('COUNT(%s) AS `new`', self::column('id'))),
         );
