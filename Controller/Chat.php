@@ -8,6 +8,19 @@ use Krystal\Stdlib\VirtualEntity;
 final class Chat extends AbstractSiteController
 {
     /**
+     * Renders chat page
+     * 
+     * @param array $vars Page variables
+     * @return string
+     */
+    private function renderChat(array $vars)
+    {
+        $this->view->getPluginBag()->appendStylesheet('@Chat/chat-style.css');
+
+        return $this->view->render('profile/chat', $vars);
+    }
+    
+    /**
      * Renders data grid
      * 
      * @return string
@@ -17,7 +30,7 @@ final class Chat extends AbstractSiteController
         // Get receivers of current user
         $receivers = $this->getModuleService('messageService')->fetchReceivers($this->getAuthService()->getId());
 
-        return $this->view->render('profile/chat', array(
+        return $this->renderChat(array(
             'receivers' => $receivers
         ));
     }
@@ -59,7 +72,7 @@ final class Chat extends AbstractSiteController
             // Get receivers of current user
             $receivers = $msgServ->fetchReceivers($senderId);
 
-            $output = $this->view->render('profile/chat', array(
+            $output = $this->renderChat(array(
                 'receivers' => $receivers,
                 'dialog' => $dialog,
                 'receiverId' => $receiverId,

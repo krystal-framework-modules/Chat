@@ -4,58 +4,60 @@ use Krystal\Form\Element;
 
 ?>
 
-<div class="row">
-    <div class="col-lg-3">
-        <h5><?php $this->show('Recent'); ?></h5>
+<section class="chat">
+    <div class="row">
+        <div class="col-lg-3">
+            <h5><?php $this->show('Recent'); ?></h5>
 
-        <ul class="list-group">
-          <?php foreach ($receivers as $receiver): ?>
-          <li class="list-group-item d-flex justify-content-between align-items-center <?= isset($receiverId) && $receiverId == $receiver['id'] ? 'active' : null; ?>">
-            <a href="<?= $this->url('Chat:Chat@dialogAction', array($receiver['id'])); ?>"><img class="img-fluid rounded-circle" src="https://via.placeholder.com/50" /> <?= $receiver['name']; ?></a>
+            <ul class="list-group">
+              <?php foreach ($receivers as $receiver): ?>
+              <li class="list-group-item d-flex justify-content-between align-items-center <?= isset($receiverId) && $receiverId == $receiver['id'] ? 'active' : null; ?>">
+                <a href="<?= $this->url('Chat:Chat@dialogAction', array($receiver['id'])); ?>"><img class="img-fluid rounded-circle" src="https://via.placeholder.com/50" /> <?= $receiver['name']; ?></a>
 
-            <small><?= $receiver['last']; ?></small>
+                <small><?= $receiver['last']; ?></small>
 
-            <?php if ($receiver['new'] > 0): ?>
-            <span class="badge badge-danger badge-pill">+ <?= $receiver['new']; ?></span>
-            <?php endif; ?>
-          </li>
-          <?php endforeach; ?>
-        </ul>
-    </div>
+                <?php if ($receiver['new'] > 0): ?>
+                <span class="badge badge-danger badge-pill">+ <?= $receiver['new']; ?></span>
+                <?php endif; ?>
+              </li>
+              <?php endforeach; ?>
+            </ul>
+        </div>
 
-    <div class="col-lg-9">
-        <?php if (isset($dialog)): ?>
+        <div class="col-lg-9">
+            <?php if (isset($dialog)): ?>
 
-        <p><?= $current['name']; ?>, <?= $current['age']; ?></p>
+            <p><?= $current['name']; ?>, <?= $current['age']; ?></p>
 
-        <div class="card">
-            <div class="card-body">
-                <?php foreach ($dialog as $message): ?>
-                <div class="d-flex justify-content-<?= $message['owner'] == 0 ? 'start' : 'end'; ?> mb-4">
-                    <div class="chat-sender p-2">
-                        <img class="img-fluid rounded-circle" src="https://via.placeholder.com/50" />
+            <div class="card">
+                <div class="card-body">
+                    <?php foreach ($dialog as $message): ?>
+                    <div class="d-flex justify-content-<?= $message['owner'] == 0 ? 'start' : 'end'; ?> mb-4">
+                        <div class="chat-sender p-2">
+                            <img class="img-fluid rounded-circle" src="https://via.placeholder.com/50" />
+                        </div>
+
+                        <div class="chat-message p-2 <?= $message['read'] == 0 ? 'bg-warning text-white' : null; ?>">
+                            <?= $message['message']; ?>
+                            <small class="chat-message-time"><?= $message['datetime']; ?></small>
+                        </div>
                     </div>
-
-                    <div class="chat-message p-2 <?= $message['read'] == 0 ? 'bg-warning text-white' : null; ?>">
-                        <?= $message['message']; ?>
-                        <small class="chat-message-time"><?= $message['datetime']; ?></small>
-                    </div>
+                    <?php endforeach; ?>
                 </div>
-                <?php endforeach; ?>
             </div>
+
+            <div class="chat-sender mt-2">
+                <form action="<?= $this->url('Chat:Chat@sendAction'); ?>" method="POST">
+                    <?= Element::hidden('receiver_id', $receiverId); ?>
+                    <?= Element::textarea('message', null, array('class' => 'form-control', 'placeholder' => $this->translate('Type your message'))); ?>
+
+                    <button class="mt-2 btn btn-primary" type="submit"><?php $this->show('Send'); ?></button>
+                </form>
+            </div>
+
+            <?php else: ?>
+            <p><?php $this->show('Please select a chat to start messaging'); ?></p>
+            <?php endif; ?>
         </div>
-
-        <div class="chat-sender mt-2">
-            <form action="<?= $this->url('Chat:Chat@sendAction'); ?>" method="POST">
-                <?= Element::hidden('receiver_id', $receiverId); ?>
-                <?= Element::textarea('message', null, array('class' => 'form-control', 'placeholder' => $this->translate('Type your message'))); ?>
-
-                <button class="mt-2 btn btn-primary" type="submit"><?php $this->show('Send'); ?></button>
-            </form>
-        </div>
-
-        <?php else: ?>
-        <p><?php $this->show('Please select a chat to start messaging'); ?></p>
-        <?php endif; ?>
     </div>
-</div>
+</section>
