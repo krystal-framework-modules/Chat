@@ -28,6 +28,18 @@ final class MessageService extends AbstractService
     }
 
     /**
+     * Mark all messages as read
+     * 
+     * @param int $senderId An id of sender
+     * @param int $receiverId An id of receiver
+     * @return boolean
+     */
+    public function markAsRead($senderId, $receiverId)
+    {
+        return $this->messageMapper->markAsRead($senderId, $receiverId);
+    }
+
+    /**
      * Count amount of new messages
      * 
      * @param int $ownerId Profile id
