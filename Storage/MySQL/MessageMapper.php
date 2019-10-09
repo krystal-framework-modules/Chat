@@ -91,7 +91,6 @@ final class MessageMapper extends AbstractMapper
             $qb->select(self::column('message'))
                ->from(self::getTableName())
                ->whereEquals(self::column('sender_id'), UserMapper::column('id'))
-               ->andWhereEquals(self::column('read'), '0')
                ->orderBy(self::column('id'))
                ->desc()
                ->limit(1);
