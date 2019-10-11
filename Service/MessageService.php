@@ -87,11 +87,38 @@ final class MessageService extends AbstractService
      * Fetch message receivers
      * 
      * @param int $senderId An id of sender
+     * @param int|null $receiverId
      * @return array
      */
-    public function fetchReceivers($senderId)
+    public function fetchReceivers($senderId, $receiverId = null)
     {
-        return $this->messageMapper->fetchReceivers($senderId);
+        $receivers = $this->messageMapper->fetchReceivers($senderId);
+
+        if ($receiverId !== null) {
+            $hasInList = false;
+
+            // Make sure we have no matches
+            foreach ($receivers as $receiver) {
+                if ($receiver['id'] == $receiverId) {
+                    $hasInList = true;
+                }
+            }
+
+            // Do we require to prepend a new dialog?
+            if ($hasInList === false) {
+                $new = array(
+                    'id' => $receiverId,
+                    'name' => 'New chat',
+                    'last' => '',
+                    'new' => 0
+                );
+
+                // Prepend new chat to the beginning
+                array_unshift($receivers, $new);
+            }
+        }
+
+        return $receivers;
     }
 
     /**
