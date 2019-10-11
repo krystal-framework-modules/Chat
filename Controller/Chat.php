@@ -38,6 +38,20 @@ final class Chat extends AbstractSiteController
     }
 
     /**
+     * Deletes a dialog
+     * 
+     * @param int $receiverId
+     * @return string
+     */
+    public function deleteAction($receiverId)
+    {
+        $this->getModuleService('messageService')->deleteDialog($this->getAuthService()->getId(), $receiverId);
+
+        $this->flashBag->set('success', 'Selected dialog has been deleted successfully');
+        return $this->response->back();
+    }
+
+    /**
      * Sends a message
      * 
      * @return string
@@ -90,20 +104,5 @@ final class Chat extends AbstractSiteController
             // Invalid id
             return false;
         }
-    }
-
-    /**
-     * Clears a dialog with another user
-     * 
-     * @return string
-     */
-    public function clearAction()
-    {
-        $senderId = $this->getAuthService()->getId();
-        $receiverId = $this->request->getPost('receiver_id');
-
-        $this->getModuleService('messageService')->deleteDialog($senderId, $receiverId);
-
-        return 1;
     }
 }

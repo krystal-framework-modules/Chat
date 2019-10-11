@@ -13,7 +13,7 @@ return array(
         'controller' => 'Chat@dialogAction'
     ),
 
-    '/profile/chat/clear' => array(
-        'controller' => 'Chat@clearAction'
+    '/profile/chat/delete/(:var)' => array(
+        'controller' => 'Chat@deleteAction'
     )
 );
