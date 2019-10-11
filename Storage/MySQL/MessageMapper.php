@@ -54,8 +54,8 @@ final class MessageMapper extends AbstractMapper
     {
         $db = $this->db->delete()
                        ->from(self::getTableName())
-                       ->whereEquals('sender_id', $senderId)
-                       ->andWhereEquals('receiver_id', $receiverId);
+                       ->whereEquals('sender_id', $receiverId)
+                       ->andWhereEquals('receiver_id', $senderId);
 
         return (bool) $db->execute(true);
     }
