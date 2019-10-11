@@ -7,7 +7,7 @@ use Krystal\Form\Element;
 <section class="chat">
     <div class="row">
         <div class="col-lg-3">
-            <h5><?php $this->show('Recent'); ?></h5>
+            <h5><?php $this->show('Recent'); ?> <small class="text-muted">(<?= count($receivers); ?>)</small></h5>
 
             <ul class="list-group">
               <?php foreach ($receivers as $receiver): ?>
@@ -29,7 +29,7 @@ use Krystal\Form\Element;
         <div class="col-lg-9">
             <?php if (isset($dialog)): ?>
 
-            <p><?= $current['name']; ?>, <?= $current['age']; ?></p>
+            <p><?= $current['name']; ?>, <?= $current['age']; ?> <small class="text-muted"> / <?= count($dialog); ?> <?php $this->show('Messages'); ?></small></p>
 
             <div class="card">
                 <div class="card-body">
