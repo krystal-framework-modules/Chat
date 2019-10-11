@@ -57,6 +57,12 @@ use Krystal\Form\Element;
                 </div>
             </div>
 
+            <?php else: ?>
+            
+            <p><?php $this->show('No messages here'); ?></p>
+
+            <?php endif; ?>
+
             <div class="chat-sender mt-2">
                 <form action="<?= $this->url('Chat:Chat@sendAction'); ?>" method="POST">
 
@@ -70,12 +76,6 @@ use Krystal\Form\Element;
                     </div>
                 </form>
             </div>
-
-            <?php else: ?>
-            
-            <p><?php $this->show('No messages here'); ?></p>
-
-            <?php endif; ?>
 
             <?php else: ?>
             <p><?php $this->show('Please select a chat to start messaging'); ?></p>
