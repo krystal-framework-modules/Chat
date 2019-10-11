@@ -79,6 +79,11 @@ final class Chat extends AbstractSiteController
     {
         $receiver = $this->getAuthService()->findById($receiverId);
 
+        // Can not start a dialog with oneself. Trigger 404 if this happens
+        if ($this->getAuthService()->getId() == $receiverId) {
+            return false;
+        }
+
         if ($receiver) {
             $msgServ = $this->getModuleService('messageService');
 
@@ -86,7 +91,7 @@ final class Chat extends AbstractSiteController
             $dialog = $msgServ->fetchDialog($receiverId, $senderId);
 
             // Get receivers of current user
-            $receivers = $msgServ->fetchReceivers($senderId);
+            $receivers = $msgServ->fetchReceivers($senderId, $receiverId);
 
             $output = $this->renderChat(array(
                 'receivers' => $receivers,
