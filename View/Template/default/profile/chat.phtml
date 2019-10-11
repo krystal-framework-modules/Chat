@@ -29,7 +29,15 @@ use Krystal\Form\Element;
         <div class="col-lg-9">
             <?php if (isset($dialog)): ?>
 
-            <p><?= $current['name']; ?>, <?= $current['age']; ?> <small class="text-muted"> / <?= count($dialog); ?> <?php $this->show('Messages'); ?></small></p>
+            <div class="row mb-1">
+                <div class="col">
+                    <span><?= $current['name']; ?>, <?= $current['age']; ?> <small class="text-muted"> / <?= count($dialog); ?> <?php $this->show('Messages'); ?></small></span>
+                </div>
+
+                <div class="col">
+                    <span class="float-right"><a href="<?= $this->url('Chat:Chat@deleteAction', array($receiverId)); ?>" class="btn btn-primary btn-sm"><?php $this->show('Delete dialog'); ?></a></span>
+                </div>
+            </div>
 
             <div class="card">
                 <div class="card-body">
