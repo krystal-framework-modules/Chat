@@ -9,6 +9,7 @@ use Krystal\Form\Element;
         <div class="col-lg-3">
             <h5><?php $this->show('Recent'); ?> <small class="text-muted">(<?= count($receivers); ?>)</small></h5>
 
+            <?php if (!empty($receivers)): ?>
             <ul class="list-group">
               <?php foreach ($receivers as $receiver): ?>
               <li class="list-group-item d-flex justify-content-between align-items-center <?= isset($receiverId) && $receiverId == $receiver['id'] ? 'active' : null; ?>">
@@ -24,6 +25,10 @@ use Krystal\Form\Element;
               </li>
               <?php endforeach; ?>
             </ul>
+            <?php else: ?>
+
+            <p><?php $this->show('You didn\'t start talking with anyone yet'); ?></p>
+            <?php endif; ?>
         </div>
 
         <div class="col-lg-9">
