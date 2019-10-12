@@ -78,19 +78,19 @@ final class MessageMapper extends AbstractMapper
     }
 
     /**
-     * Fetch message receivers (last message, new message count and sender name)
+     * Creates query to grab main data
      * 
-     * @param int $receiverId An id of receiver - id of currently logged-in user
-     * @return array
+     * @param int $receiverId
+     * @return string
      */
-    public function fetchReceivers($receiverId)
+    private function createNewCountQuery($receiverId)
     {
         // Inner query to grab last message from a sender
         $lastMessageQuery = function(){
             $qb = new QueryBuilder();
             $qb->select(self::column('message'))
                ->from(self::getTableName())
-               ->whereEquals(self::column('sender_id'), UserMapper::column('id'))
+               ->whereEquals(self::column('receiver_id_id'), UserMapper::column('id'))
                ->orderBy(self::column('id'))
                ->desc()
                ->limit(1);
@@ -104,34 +104,116 @@ final class MessageMapper extends AbstractMapper
             $qb->select()
                ->count(self::column('id'))
                ->from(self::getTableName())
-               ->whereEquals(self::column('sender_id'), UserMapper::column('id'))
+               ->whereEquals(self::column('receiver_id'), UserMapper::column('id'))
                ->andWhereEquals(self::column('read'), '0');
 
             return $qb->getQueryString();
         };
+        
+        $qb = new QueryBuilder();
+        $qb->openBracket()
+           ->select(array(
+                UserMapper::column('id'),
+                UserMapper::column('name'),
+           ))
+           ->expression($lastMessageQuery(), 'last')
+           ->expression($countQuery(), 'new')
+           ->from(self::getTableName())
+           // User relation
+           ->leftJoin(UserMapper::getTableName(), array(
+                UserMapper::column('id') => self::column('sender_id'),
+           ))
+           ->whereEquals(self::column('receiver_id'), $receiverId)
+           ->groupBy(array(
+                UserMapper::column('id'),
+                UserMapper::column('name'),
+                'last',
+                'new'
+            ))
+           ->closeBracket();
 
-        // Columns to be selected
-        $columns = array(
-            UserMapper::column('id'),
-            UserMapper::column('name'),
-            new RawSqlFragment(sprintf('(%s) AS `last`', $lastMessageQuery())),
-            new RawSqlFragment(sprintf('(%s) AS `new`', $countQuery())),
-        );
+        return $qb->getQueryString();
+    }
 
-        $db = $this->db->select($columns)
-                       ->from(self::getTableName())
-                       ->leftJoin(UserMapper::getTableName(), array(
-                            UserMapper::column('id') => self::getRawColumn('sender_id'),
-                       ))
-                       ->whereEquals(self::column('receiver_id'), $receiverId)
-                       ->groupBy(array(
-                            UserMapper::column('id'),
-                            UserMapper::column('name'),
-                            'last',
-                            'new'
-                        ));
+    /**
+     * Create query to grab unread messages
+     * 
+     * @param int $senderId
+     * @return string
+     */
+    private function createUnreadQuery($senderId)
+    {
+        // Inner query to grab last message from a sender
+        $lastMessageQuery = function(){
+            $qb = new QueryBuilder();
+            $qb->select(self::column('message'))
+               ->from(self::getTableName())
+               ->whereEquals(self::column('receiver_id'), UserMapper::column('id'))
+               ->orderBy(self::column('id'))
+               ->desc()
+               ->limit(1);
 
-        return $db->queryAll();
+            return $qb->getQueryString();
+        };
+
+        // Inner query to grab singular contacts
+        $internalQuery = function($senderId){
+            $subQuery = new QueryBuilder();
+            $subQuery->select(1)
+                     ->from(self::getTableName(), 'um2')
+                     ->whereEquals('um2.sender_id', 'um.receiver_id');
+
+            $qb = new QueryBuilder();
+            $qb->openBracket()
+               ->select('um.receiver_id', true)
+               ->from(self::getTableName(), 'um')
+               ->whereEquals('um.sender_id', $senderId)
+               ->rawAnd()
+               ->notExists($subQuery->getQueryString())
+               ->closeBracket();
+
+            return $qb->getQueryString();
+        };
+
+        $qb = new QueryBuilder();
+        $qb->openBracket()
+           ->select(array(
+                UserMapper::column('id'),
+                UserMapper::column('name'),
+           ))
+           ->expression($lastMessageQuery(), 'last')
+           ->expression(0, 'new')
+           ->from(self::getTableName())
+           // User relation
+           ->leftJoin(UserMapper::getTableName(), array(
+                UserMapper::column('id') => self::column('receiver_id'),
+           ))
+           ->whereIn(self::column('receiver_id'), new RawSqlFragment($internalQuery($senderId)))
+           ->groupBy(array(
+                UserMapper::column('id'),
+                UserMapper::column('name'),
+                'last',
+                'new'
+            ))
+           ->closeBracket();
+
+        return $qb->getQueryString();
+    }
+
+    /**
+     * Fetch message receivers (last message, new message count and sender name)
+     * 
+     * @param int $receiverId An id of receiver - id of currently logged-in user
+     * @return array
+     */
+    public function fetchReceivers($receiverId)
+    {
+        $receiverId = (int) $receiverId;
+
+        $query = sprintf('%s UNION %s', $this->createNewCountQuery($receiverId), $this->createUnreadQuery($receiverId));
+
+        return $this->db->raw($query)
+                        ->queryAll();
     }
 
     /**
