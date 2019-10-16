@@ -221,7 +221,7 @@ final class MessageMapper extends AbstractMapper
     {
         $receiverId = (int) $receiverId;
 
-        $query = sprintf('%s UNION %s', $this->createNewCountQuery($receiverId), $this->createUnreadQuery($receiverId));
+        $query = sprintf('%s UNION %s', $this->createUnreadQuery($receiverId), $this->createNewCountQuery($receiverId));
 
         return $this->db->raw($query)
                         ->queryAll();
@@ -242,7 +242,7 @@ final class MessageMapper extends AbstractMapper
             self::column('message'),
             self::column('datetime'),
             self::column('read'),
-            self::column('avatar'),
+            UserMapper::column('avatar'),
             new RawSqlFragment(sprintf(
                 '(%s = %s) AS `owner`', 'receiver_id', (int) $senderId
             ))
