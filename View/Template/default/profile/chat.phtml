@@ -36,7 +36,7 @@ use Krystal\Form\Element;
 
             <div class="row mb-1">
                 <div class="col">
-                    <span><?= $current['name']; ?><?php if (!empty($current['age'])): ?>, <?= $current['age']; ?> <?php endif; ?><small class="text-muted"> / <?= count($dialog); ?> <?php $this->show('Messages'); ?></small></span>
+                    <span><?= $current['name']; ?><?php if (!empty($current['age'])): ?>, <?= $current['age']; ?> <?php endif; ?><small class="text-muted"> / <?= count($dialog) == 0 ? $this->show('No messages') : count($dialog) . PHP_EOL . $this->translate('Messages'); ?> </small></span>
                 </div>
 
                 <?php if (!empty($dialog)): ?>
