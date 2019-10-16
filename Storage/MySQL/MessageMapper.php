@@ -98,7 +98,7 @@ final class MessageMapper extends AbstractMapper
             $qb = new QueryBuilder();
             $qb->select(self::column('message'))
                ->from(self::getTableName())
-               ->whereEquals(self::column('receiver_id'), UserMapper::column('id'))
+               ->whereEquals(self::column('sender_id'), UserMapper::column('id'))
                ->orderBy(self::column('id'))
                ->desc()
                ->limit(1);
@@ -112,7 +112,7 @@ final class MessageMapper extends AbstractMapper
             $qb->select()
                ->count(self::column('id'))
                ->from(self::getTableName())
-               ->whereEquals(self::column('receiver_id'), UserMapper::column('id'))
+               ->whereEquals(self::column('sender_id'), UserMapper::column('id'))
                ->andWhereEquals(self::column('read'), '0');
 
             return $qb->getQueryString();
