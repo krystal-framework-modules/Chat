@@ -124,6 +124,7 @@ final class MessageMapper extends AbstractMapper
            ->select(array(
                 UserMapper::column('id'),
                 UserMapper::column('name'),
+                UserMapper::column('avatar')
            ))
            ->expression($lastMessageQuery(), 'last')
            ->expression($countQuery($receiverId), 'new')
@@ -189,6 +190,7 @@ final class MessageMapper extends AbstractMapper
            ->select(array(
                 UserMapper::column('id'),
                 UserMapper::column('name'),
+                UserMapper::column('avatar')
            ))
            ->expression($lastMessageQuery(), 'last')
            ->expression(0, 'new')
@@ -236,10 +238,11 @@ final class MessageMapper extends AbstractMapper
     {
         // Columns to be selected
         $columns = array(
-            'id',
-            'message',
-            'datetime',
-            'read',
+            self::column('id'),
+            self::column('message'),
+            self::column('datetime'),
+            self::column('read'),
+            self::column('avatar'),
             new RawSqlFragment(sprintf(
                 '(%s = %s) AS `owner`', 'receiver_id', (int) $senderId
             ))
@@ -249,8 +252,13 @@ final class MessageMapper extends AbstractMapper
 
         $db = $this->db->select($columns)
                        ->from(self::getTableName())
+                       // User relation
+                       ->leftJoin(UserMapper::getTableName(), array(
+                            UserMapper::column('id') => 'receiver_id'
+                       ))
                        ->whereIn('sender_id', $values)
-                       ->andWhereIn('receiver_id', $values);
+                       ->andWhereIn('receiver_id', $values)
+                       ->orderBy(self::column('id'));
 
         return $db->queryAll();
     }
