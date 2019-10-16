@@ -1,0 +1,92 @@
+<?php
+
+use Krystal\Form\Element;
+
+?>
+
+<section class="chat">
+    <div class="row">
+        <div class="col-lg-3">
+            <h5><?php $this->show('Recent'); ?> <small class="text-muted">(<?= count($receivers); ?>)</small></h5>
+
+            <?php if (!empty($receivers)): ?>
+            <ul class="list-group">
+              <?php foreach ($receivers as $receiver): ?>
+              <li class="list-group-item d-flex justify-content-between align-items-center <?= isset($receiverId) && $receiverId == $receiver['id'] ? 'active' : null; ?>">
+                <a href="<?= $this->url('Chat:Chat@dialogAction', array($receiver['id'])); ?>">
+                    <img class="img-fluid rounded-circle" src="https://via.placeholder.com/50" />
+                    <span class="chat-receiver"><?= $receiver['name']; ?></span>
+                    <small><?= $receiver['last']; ?></small>
+                </a>
+
+                <?php if ($receiver['new'] > 0): ?>
+                <span class="badge badge-danger badge-pill">+ <?= $receiver['new']; ?></span>
+                <?php endif; ?>
+              </li>
+              <?php endforeach; ?>
+            </ul>
+            <?php else: ?>
+
+            <p><?php $this->show('You didn\'t start talking with anyone yet'); ?></p>
+            <?php endif; ?>
+        </div>
+
+        <div class="col-lg-9">
+            <?php if (isset($dialog)): ?>
+
+            <div class="row mb-1">
+                <div class="col">
+                    <span><?= $current['name']; ?><?php if (!empty($current['age'])): ?>, <?= $current['age']; ?> <?php endif; ?><small class="text-muted"> / <?= count($dialog) == 0 ? $this->show('No messages') : count($dialog) . PHP_EOL . $this->translate('Messages'); ?> </small></span>
+                </div>
+
+                <?php if (!empty($dialog)): ?>
+                <div class="col">
+                    <span class="float-right"><a href="<?= $this->url('Chat:Chat@deleteAction', array($receiverId)); ?>" class="btn btn-primary btn-sm"><?php $this->show('Delete dialog'); ?></a></span>
+                </div>
+                <?php endif; ?>
+            </div>
+
+            <?php if (!empty($dialog)): ?>
+            <div class="card">
+                <div class="card-body">
+                    <?php foreach ($dialog as $message): ?>
+                    <div class="d-flex justify-content-<?= $message['owner'] == 0 ? 'start chat-message-sender' : 'end chat-message-receiver'; ?> mb-4">
+                        <div class="chat-sender p-2">
+                            <img class="img-fluid rounded-circle" src="https://via.placeholder.com/50" />
+                        </div>
+
+                        <div class="chat-message <?= $message['read'] == 0 ? 'bg-warning text-white' : null; ?>">
+                            <?= $message['message']; ?>
+                            <small class="chat-message-time"><?= $message['datetime']; ?></small>
+                        </div>
+                    </div>
+                    <?php endforeach; ?>
+                </div>
+            </div>
+
+            <?php else: ?>
+            
+            <p><?php $this->show('No messages here'); ?></p>
+
+            <?php endif; ?>
+
+            <div class="chat-sender mt-2">
+                <form action="<?= $this->url('Chat:Chat@sendAction'); ?>" method="POST">
+
+                    <div class="input-group">
+                        <?= Element::hidden('receiver_id', $receiverId); ?>
+                        <?= Element::textarea('message', null, array('class' => 'form-control', 'placeholder' => $this->translate('Type your message'))); ?>
+
+                        <div class="input-group-append">
+                            <button disabled="disabled" class="btn btn-primary disabled" type="submit"><?php $this->show('Send'); ?></button>
+                        </div>
+                    </div>
+                </form>
+            </div>
+
+            <?php else: ?>
+            <p><?php $this->show('Please select a chat to start messaging'); ?></p>
+            <?php endif; ?>
+        </div>
+    </div>
+</section>

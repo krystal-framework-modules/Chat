@@ -1,2 +1,3 @@
 # Chat
-Chat module for users to communicate with each other
+
+Simple and lightweight chat module for your users to communicate with each other privatively. 

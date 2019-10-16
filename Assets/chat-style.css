@@ -1,0 +1,93 @@
+/**
+ * Default chat styles
+ */
+
+.chat {
+    
+}
+
+/* Receivers */
+.chat .list-group {
+    background: #435f7a;
+}
+
+.chat .list-group .list-group-item {
+    background: inherit;
+    border: none;
+    color: #fff;
+}
+
+.chat .list-group .list-group-item.active {
+    background-color: #2a455f !important;
+}
+
+.chat .list-group .list-group-item a {
+    color: #fff;
+    display: block;
+    width: 100%;
+}
+
+.chat .list-group .list-group-item a:hover {
+    text-decoration: none;
+}
+
+.chat .list-group .list-group-item a .chat-receiver,
+.chat .list-group .list-group-item a small {
+    display: block;
+} 
+
+.chat .list-group .list-group-item a .chat-receiver {
+    font-size: 20px;
+    font-weight: bold;
+}
+
+.chat .list-group .list-group-item a img {
+    float: left;
+    margin-right: 21px;
+}
+
+/* Messages */
+.chat .card {
+    background: #e6eaea;
+    max-height: 374px;
+    overflow-x: hidden;
+}
+
+.chat .chat-message {
+    padding: 10px 15px;
+    border-radius: 20px;
+    line-height: 130%;
+}
+
+.chat .chat-message-sender .chat-message {
+    background: #435f7a;
+    color: #f5f5f5;
+}
+
+.chat .chat-message-receiver .chat-message {
+    background: #f5f5f5;
+}
+
+.chat .chat-message-time {
+    display: block;
+    font-size: 8px;
+    margin-top: 10px;
+}
+
+/* Sender */
+.chat .chat-sender {
+    
+}
+
+.chat .chat-sender .form-control {
+    background: #e6eaea;
+}
+
+.chat .chat-sender .form-control:focus {
+    box-shadow: none;
+}
+
+.chat .chat-sender .btn {
+    background: #435f7a;
+    color: #fff;
+}
