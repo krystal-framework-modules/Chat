@@ -107,12 +107,13 @@ final class MessageMapper extends AbstractMapper
         };
 
         // Inner query to count unread message
-        $countQuery = function(){
+        $countQuery = function($receiverId){
             $qb = new QueryBuilder();
             $qb->select()
                ->count(self::column('id'))
                ->from(self::getTableName())
                ->whereEquals(self::column('sender_id'), UserMapper::column('id'))
+               ->andWhereEquals(self::column('receiver_id'), $receiverId)
                ->andWhereEquals(self::column('read'), '0');
 
             return $qb->getQueryString();
@@ -125,7 +126,7 @@ final class MessageMapper extends AbstractMapper
                 UserMapper::column('name'),
            ))
            ->expression($lastMessageQuery(), 'last')
-           ->expression($countQuery(), 'new')
+           ->expression($countQuery($receiverId), 'new')
            ->from(self::getTableName())
            // User relation
            ->leftJoin(UserMapper::getTableName(), array(
