@@ -6,6 +6,10 @@
     
 }
 
+.chat .avatar {
+    max-width: 52px;
+}
+
 /* Receivers */
 .chat .list-group {
     background: #435f7a;

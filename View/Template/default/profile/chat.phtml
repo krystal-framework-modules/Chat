@@ -14,7 +14,7 @@ use Krystal\Form\Element;
               <?php foreach ($receivers as $receiver): ?>
               <li class="list-group-item d-flex justify-content-between align-items-center <?= isset($receiverId) && $receiverId == $receiver['id'] ? 'active' : null; ?>">
                 <a href="<?= $this->url('Chat:Chat@dialogAction', array($receiver['id'])); ?>">
-                    <img class="img-fluid rounded-circle" src="https://via.placeholder.com/50" />
+                    <img class="img-fluid rounded-circle avatar" src="<?= $receiver['avatar']; ?>" />
                     <span class="chat-receiver"><?= $receiver['name']; ?></span>
                     <small><?= $receiver['last']; ?></small>
                 </a>
@@ -52,7 +52,7 @@ use Krystal\Form\Element;
                     <?php foreach ($dialog as $message): ?>
                     <div class="d-flex justify-content-<?= $message['owner'] == 0 ? 'start chat-message-sender' : 'end chat-message-receiver'; ?> mb-4">
                         <div class="chat-sender p-2">
-                            <img class="img-fluid rounded-circle" src="https://via.placeholder.com/50" />
+                            <img class="img-fluid rounded-circle avatar" src="<?= $message['avatar']; ?>" />
                         </div>
 
                         <div class="chat-message <?= $message['read'] == 0 ? 'bg-warning text-white' : null; ?>">
