@@ -16,8 +16,8 @@ final class Chat extends AbstractSiteController
     private function renderChat(array $vars)
     {
         // Append assets
-        $this->view->getPluginBag()->appendStylesheet('@Chat/chat-style.css?v=' . time())
-                                   ->appendLastScript('@Chat/chat-handler.js?v=' . time());
+        $this->view->getPluginBag()->appendStylesheet('@Chat/chat-style.css')
+                                   ->appendLastScript('@Chat/chat-handler.js');
 
         return $this->view->render('profile/chat', $vars);
     }
